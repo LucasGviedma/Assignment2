@@ -81,6 +81,8 @@ def _ndcg_score(y_true, y_pred, qid, k=None, dcg_func=None):
     dcg = _dcg_score(y_true, y_pred, qid, k=k, dcg_func=dcg_func)
     idcg = np.array([dcg_func(np.sort(y_true[a:b]), np.arange(0, b - a), k=k)
                      for a, b in group_offsets(qid)])
+    print(dcg, idcg)
+    # ACA
     assert (dcg <= idcg).all()
     idcg[idcg == 0] = 1
     return dcg / idcg
