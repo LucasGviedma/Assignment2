@@ -25,9 +25,8 @@ class AdaRank(sklearn.base.BaseEstimator):
 
     def fit(self, X, y, qid, X_valid=None, y_valid=None, qid_valid=None):
         """Fit a model to the data"""
-        print("HOLA0")
+        
         X, y = check_X_y(X, y, 'csr')
-        print("HOLA1")
         X = X.toarray()
 
         if X_valid is None:
@@ -36,7 +35,6 @@ class AdaRank(sklearn.base.BaseEstimator):
             X_valid, y_valid = check_X_y(X_valid, y_valid, 'csr')
             X_valid = X_valid.toarray()
 
-        print("HOLA2")
         n_queries = np.unique(qid).shape[0]
         weights = np.ones(n_queries, dtype=np.float64) / n_queries
         weak_rankers = []
@@ -46,11 +44,12 @@ class AdaRank(sklearn.base.BaseEstimator):
         if self.scorer is None:
             self.scorer = NDCGScorer(k=10)
 
-        print("HOLA3")
         # precompute performance measurements for all weak rankers
         weak_ranker_score = []
+        print(X)
         for j in range(X.shape[1]):
             pred = X[:, j].ravel()
+            print(X[:, j])
             weak_ranker_score.append(self.scorer(y, pred, qid))
 
         best_perf_train = -np.inf
@@ -58,11 +57,9 @@ class AdaRank(sklearn.base.BaseEstimator):
         used_fids = []
         estop = None
 
-        print("HOLA4")
         self.n_iter = 0
         while self.n_iter < self.max_iter:
             
-            print("HOLA5",self.n_iter)
             self.n_iter += 1
 
             best_weighted_average = -np.inf
@@ -71,6 +68,7 @@ class AdaRank(sklearn.base.BaseEstimator):
                 if fid in used_fids:
                     continue
                 weighted_average = np.dot(weights, score)
+                
                 if weighted_average > best_weighted_average:
                     best_weak_ranker = {'fid': fid, 'score': score}
                     best_weighted_average = weighted_average
