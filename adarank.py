@@ -28,6 +28,8 @@ class AdaRank(sklearn.base.BaseEstimator):
         
         X, y = check_X_y(X, y, 'csr')
         X = X.toarray()
+        
+        print("f",type(X))
 
         if X_valid is None:
             X_valid, y_valid, qid_valid = X, y, qid
@@ -46,10 +48,10 @@ class AdaRank(sklearn.base.BaseEstimator):
 
         # precompute performance measurements for all weak rankers
         weak_ranker_score = []
-        print(X)
+        #print(X)
         for j in range(X.shape[1]):
             pred = X[:, j].ravel()
-            print(X[:, j])
+            #print(X[:, j])
             weak_ranker_score.append(self.scorer(y, pred, qid))
 
         best_perf_train = -np.inf
@@ -78,7 +80,7 @@ class AdaRank(sklearn.base.BaseEstimator):
                 break
 
             h = best_weak_ranker
-            print(np.dot(weights, 1 + h['score']) / np.dot(weights, 1 - h['score']))
+            #print(np.dot(weights, 1 + h['score']) / np.dot(weights, 1 - h['score']))
             h['alpha'] = 0.5 * (math.log(np.dot(weights, 1 + h['score']) /
                                          np.dot(weights, 1 - h['score'])))
             weak_rankers.append(h)
