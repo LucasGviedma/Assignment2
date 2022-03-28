@@ -3,8 +3,11 @@ CBIR HCL, HOG and Bhattacharyya distance
 Input: path to an image
 Output: 5 most similar images
 '''
-
-# import the necessary packages
+# INPUT IMAGE
+# ej: rice_leaf_diseases_no_back/leaf smut/leaf_smut_6.jpg 
+image_path = "rice_leaf_diseases_no_back/leaf smut/leaf_smut_6.jpg"
+    
+# Import the necessary packages
 import glob
 import cv2
 import numpy as np
@@ -35,59 +38,42 @@ def getHCL(image):
 	image_hcl = cv2.normalize(image_hcl, image_hcl).flatten()
 	return image_hcl
 
-def main():
-    
-    #Input image 
-    #ej: rice_leaf_diseases_no_back/leaf smut/leaf_smut_6.jpg (without "")
-    image_path = input("Enter image path:")
+# Read chosen image
+chosen_image     = getIMG(image_path)
+# Compute HOG of the image
+chosen_image_hog = getHOG(chosen_image)
+# Compute HCL of the image
+chosen_image_hcl = getHCL(chosen_image)
 
-    # Choose if the images' dataset (y is fixed background)
-    choose_back = input("Want to use the database with fixed background? (y/n):")
-    if choose_back == "y":
-        background = "rice_leaf_diseases\\/*\\"
-    else:
-        background = "rice_leaf_diseases_no_back\\/*\\"
-        
-    # Read chosen image
-    chosen_image     = getIMG(image_path)
-    # Compute HOG of the image
-    chosen_image_hog = getHOG(chosen_image)
-    # Compute HCL of the image
-    chosen_image_hcl = getHCL(chosen_image)
-    
-    # Read comparison images
-    images      = []
-    images_name = []
-    images_hog  = []
-    images_hcl  = []
+# Read comparison images
+images      = []
+images_name = []
+images_hog  = []
+images_hcl  = []
 
-    for image_path in glob.glob(background + "/*.JPG"):
+for image_path in glob.glob("rice_leaf_diseases_no_back\\/*\\" + "/*.JPG"):
+    image = getIMG(image_path)
+    images.append(image)
+    images_hcl.append(getHCL(image))
+    images_name.append(str(image_path.split(sep="\\")[2]))
     
-        image = getIMG(image_path)
-        images.append(image)
-        images_hcl.append(getHCL(image))
-        images_name.append(str(image_path.split(sep="\\")[2]))
+distances_hog = []
+distances_hcl = []
     
-    distances_hog = []
-    distances_hcl = []
-    
-    # Compare the distance of the hcl images
-    for image_hcl in images_hcl:
-        distances_hcl.append(cv2.compareHist(image_hcl, chosen_image_hcl, cv2.HISTCMP_BHATTACHARYYA))
-    most_similar_hcls = np.argsort(distances_hcl)[:15]
+# Compare the distance of the hcl images
+for image_hcl in images_hcl:
+    distances_hcl.append(cv2.compareHist(image_hcl, chosen_image_hcl, cv2.HISTCMP_BHATTACHARYYA))
+most_similar_hcls = np.argsort(distances_hcl)[:15]
         
-    for image in np.array(images)[most_similar_hcls]:
-        images_hog.append(getHOG(image))
+for image in np.array(images)[most_similar_hcls]:
+    images_hog.append(getHOG(image))
         
-    # Compare the distance of the hog images   
-    for image_hog in images_hog:
-        distances_hog.append(cv2.compareHist(image_hog, chosen_image_hog, cv2.HISTCMP_BHATTACHARYYA))
-    most_similar_hogs = np.argsort(distances_hog)[:5]
+# Compare the distance of the hog images   
+for image_hog in images_hog:
+    distances_hog.append(cv2.compareHist(image_hog, chosen_image_hog, cv2.HISTCMP_BHATTACHARYYA))
+most_similar_hogs = np.argsort(distances_hog)[:5]
     
-    # Print the 5 images with the lower distance   
-    most_similar_imgs = np.array(most_similar_hcls)[most_similar_hogs]
-    print("The five most similar images are: \n")
-    print(np.array(images_name)[most_similar_imgs])
-
-if __name__ == '__main__':
-    main()
+# Print the 5 images with the lower distance   
+most_similar_imgs = np.array(most_similar_hcls)[most_similar_hogs]
+print("The five most similar images are: \n")
+print(np.array(images_name)[most_similar_imgs])
