@@ -3,11 +3,11 @@ CBIR HCL and Bhattacharyya distance
 Input: path to an image
 Output: 5 most similar images
 '''
-# Input image
+# INPUT IMAGE
 # ej: rice_leaf_diseases_no_back/leaf smut/leaf_smut_6.jpg 
 image_path = "rice_leaf_diseases_no_back/leaf smut/leaf_smut_6.jpg"
     
-# import the necessary packages
+# Import the necessary packages
 import glob
 import cv2
 import numpy as np
