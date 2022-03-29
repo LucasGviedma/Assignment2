@@ -36,11 +36,13 @@ chosen_image     = getIMG(image_path)
 chosen_image_hcl = getHCL(chosen_image)
     
 # Read comparison images
+images      = []
 images_hcl  = []
 images_name = []
 
 for image_path in glob.glob("rice_leaf_diseases_no_back\\/*\\" + "/*.JPG"):
     image = getIMG(image_path)
+    images.append(image)
     images_hcl.append(getHCL(image))
     images_name.append(str(image_path.split(sep="\\")[2]))
 
@@ -53,3 +55,12 @@ for image_hcl in images_hcl:
 most_similar_hcls = np.argsort(distances_hcl)[:5]
 print("The five most similar images are:")
 print(np.array(images_name)[most_similar_hcls])
+
+cv2.imshow("INPUT - " + image_path, cv2.resize(chosen_image, (1189,360)))
+cv2.imshow("Rank 1 - " + images_name[most_similar_hcls[0]], cv2.resize(images[most_similar_hcls[0]], (1189,360)))
+cv2.imshow("Rank 2 - " + images_name[most_similar_hcls[1]], cv2.resize(images[most_similar_hcls[1]], (1189,360)))
+cv2.imshow("Rank 3 - " + images_name[most_similar_hcls[2]], cv2.resize(images[most_similar_hcls[2]], (1189,360)))
+cv2.imshow("Rank 4 - " + images_name[most_similar_hcls[3]], cv2.resize(images[most_similar_hcls[3]], (1189,360)))
+cv2.imshow("Rank 5 - " + images_name[most_similar_hcls[4]], cv2.resize(images[most_similar_hcls[4]], (1189,360)))
+
+cv2.waitKey()

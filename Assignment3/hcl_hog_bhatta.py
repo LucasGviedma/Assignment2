@@ -77,3 +77,12 @@ most_similar_hogs = np.argsort(distances_hog)[:5]
 most_similar_imgs = np.array(most_similar_hcls)[most_similar_hogs]
 print("The five most similar images are: \n")
 print(np.array(images_name)[most_similar_imgs])
+
+cv2.imshow("INPUT - " + image_path, cv2.resize(chosen_image, (1189,360)))
+cv2.imshow("Rank 1 - " + images_name[most_similar_imgs[0]], cv2.resize(images[most_similar_imgs[0]], (1189,360)))
+cv2.imshow("Rank 2 - " + images_name[most_similar_imgs[1]], cv2.resize(images[most_similar_imgs[1]], (1189,360)))
+cv2.imshow("Rank 3 - " + images_name[most_similar_imgs[2]], cv2.resize(images[most_similar_imgs[2]], (1189,360)))
+cv2.imshow("Rank 4 - " + images_name[most_similar_imgs[3]], cv2.resize(images[most_similar_imgs[3]], (1189,360)))
+cv2.imshow("Rank 5 - " + images_name[most_similar_imgs[4]], cv2.resize(images[most_similar_imgs[4]], (1189,360)))
+
+cv2.waitKey()
