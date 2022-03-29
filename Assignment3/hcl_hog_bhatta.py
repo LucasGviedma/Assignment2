@@ -4,8 +4,9 @@ Input: path to an image
 Output: 5 most similar images
 '''
 # INPUT IMAGE
-# ej: rice_leaf_diseases_no_back/leaf smut/leaf_smut_6.jpg 
-image_path = "rice_leaf_diseases_no_back/leaf smut/leaf_smut_8.jpg"
+# ej: rice_leaf_diseases/leaf_smut_6.jpg 
+image_path = "rice_leaf_diseases/leaf_smut_6.jpg"
+dataset_folder_path = "rice_leaf_diseases"
     
 # Import the necessary packages
 import glob
@@ -51,11 +52,11 @@ images_name = []
 images_hog  = []
 images_hcl  = []
 
-for image_path in glob.glob("rice_leaf_diseases_no_back\\/*\\" + "/*.JPG"):
+for image_path in glob.glob(dataset_folder_path + "/*.JPG"):
     image = getIMG(image_path)
     images.append(image)
     images_hcl.append(getHCL(image))
-    images_name.append(str(image_path.split(sep="\\")[2]))
+    images_name.append(str(image_path.split(sep="\\")[1]))
     
 distances_hog = []
 distances_hcl = []
