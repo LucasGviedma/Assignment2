@@ -5,7 +5,7 @@ Output: 5 most similar images
 '''
 # INPUT IMAGE
 # ej: rice_leaf_diseases_no_back/leaf smut/leaf_smut_6.jpg 
-image_path = "rice_leaf_diseases_no_back/leaf smut/leaf_smut_6.jpg"
+image_path = "rice_leaf_diseases_no_back/leaf smut/leaf_smut_8.jpg"
     
 # Import the necessary packages
 import glob
