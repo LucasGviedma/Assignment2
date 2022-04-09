@@ -25,11 +25,8 @@ class AdaRank(sklearn.base.BaseEstimator):
 
     def fit(self, X, y, qid, X_valid=None, y_valid=None, qid_valid=None):
         """Fit a model to the data"""
-        
         X, y = check_X_y(X, y, 'csr')
         X = X.toarray()
-        
-        print("f",type(X))
 
         if X_valid is None:
             X_valid, y_valid, qid_valid = X, y, qid
@@ -48,11 +45,10 @@ class AdaRank(sklearn.base.BaseEstimator):
 
         # precompute performance measurements for all weak rankers
         weak_ranker_score = []
-        #print(X)
         for j in range(X.shape[1]):
             pred = X[:, j].ravel()
-            #print(X[:, j])
             weak_ranker_score.append(self.scorer(y, pred, qid))
+            print(self.scorer(y, pred, qid))
 
         best_perf_train = -np.inf
         best_perf_valid = -np.inf
@@ -60,27 +56,26 @@ class AdaRank(sklearn.base.BaseEstimator):
         estop = None
 
         self.n_iter = 0
+        
         while self.n_iter < self.max_iter:
-            
             self.n_iter += 1
 
             best_weighted_average = -np.inf
             best_weak_ranker = None
+            
             for fid, score in enumerate(weak_ranker_score):
                 if fid in used_fids:
                     continue
                 weighted_average = np.dot(weights, score)
-                
                 if weighted_average > best_weighted_average:
                     best_weak_ranker = {'fid': fid, 'score': score}
                     best_weighted_average = weighted_average
-
+            print('b',best_weak_ranker)
             # stop when all the weaker rankers are out
             if best_weak_ranker is None:
                 break
 
             h = best_weak_ranker
-            #print(np.dot(weights, 1 + h['score']) / np.dot(weights, 1 - h['score']))
             h['alpha'] = 0.5 * (math.log(np.dot(weights, 1 + h['score']) /
                                          np.dot(weights, 1 - h['score'])))
             weak_rankers.append(h)
@@ -110,6 +105,7 @@ class AdaRank(sklearn.base.BaseEstimator):
             if perf_valid > best_perf_valid + self.tol:
                 estop = 0
                 best_perf_valid = perf_valid
+                print('a', coef)
                 self.coef_ = coef.copy()
             else:
                 estop += 1
@@ -130,4 +126,5 @@ class AdaRank(sklearn.base.BaseEstimator):
 
     def predict(self, X, qid):
         """Make predictions"""
+        #print(self.coef_)
         return np.dot(X.toarray(), self.coef_)

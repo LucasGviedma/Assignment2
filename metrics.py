@@ -54,17 +54,17 @@ class APScorer(Scorer):
 #
 def _burges_dcg(y_true, y_pred, k=None):
     # order = np.argsort(y_pred)[::-1]
-    print("init")
-    print("y_true",y_true)
+    #print("init")
+    #print("y_true",y_true)
     order = np.argsort(-y_pred)
-    print("order",order)
+    #print("order",order)
     y_true = np.take(y_true, order[:k])
-    print("y_true",y_true)
+    #print("y_true",y_true)
     gain = 2 ** y_true - 1
-    print("gain",gain)
+    #print("gain",gain)
     discounts = np.log2(np.arange(len(gain)) + 2)
-    print("discounts",discounts)
-    print("gain / discounts",np.sum(gain / discounts))
+    #print("discounts",discounts)
+    #print("gain / discounts",np.sum(gain / discounts))
     return np.sum(gain / discounts)
 
 
@@ -86,10 +86,10 @@ def _dcg_score(y_true, y_pred, qid, k=None, dcg_func=None):
 def _ndcg_score(y_true, y_pred, qid, k=None, dcg_func=None):
     assert dcg_func is not None
     y_true = np.maximum(y_true, 0)
-    print(y_true[0])
-    print(y_pred[0])
+    #print(y_true[0])
+    #print(y_pred[0])
     dcg = _dcg_score(y_true, y_pred, qid, k=k, dcg_func=dcg_func)
-    print(dcg)
+    #print(dcg)
     idcg = np.array([dcg_func(np.sort(y_true[a:b]), np.arange(0, b - a), k=k)
                      for a, b in group_offsets(qid)])
     # ACA
