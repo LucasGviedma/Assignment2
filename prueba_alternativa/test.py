@@ -31,20 +31,7 @@ for i in range(5):
             NDCGScorer_qid(K=k + 1)(y_test, pred, qid_test).mean(), 4)
         scores[k].append(score)
         print('nDCG@{}\t{}\n'.format(k + 1, score))
+        
 print("==============Mean NDCG==================")
 for f in range(5):
     print("mean NDCG@{}\t{}\n".format(f + 1, round(np.mean(scores[f]), 4)))
-
-scores = []
-print(type(qid_test))
-pred = model.predict(X_test[0:5])
-print(pred, y_test[0:5], qid_test[0:5])
-score = round(NDCGScorer_qid(K=1)([y_test[0:5]], pred, qid_test[0:5]).mean(), 4)
-scores.append(score)
-score = round(NDCGScorer_qid(K=2)([y_test[0:5]], pred, qid_test[0:5]).mean(), 4)
-scores.append(score)
-score = round(NDCGScorer_qid(K=3)([y_test[0:5]], pred, qid_test[0:5]).mean(), 4)
-scores.append(score)
-score = round(NDCGScorer_qid(K=4)([y_test[0:5]], pred, qid_test[0:5]).mean(), 4)
-scores.append(score)
-print(scores)

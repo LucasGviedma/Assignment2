@@ -48,7 +48,7 @@ class AdaRank(sklearn.base.BaseEstimator):
         for j in range(X.shape[1]):
             pred = X[:, j].ravel()
             weak_ranker_score.append(self.scorer(y, pred, qid))
-            print(self.scorer(y, pred, qid))
+            #print(self.scorer(y, pred, qid))
 
         best_perf_train = -np.inf
         best_perf_valid = -np.inf
@@ -70,7 +70,7 @@ class AdaRank(sklearn.base.BaseEstimator):
                 if weighted_average > best_weighted_average:
                     best_weak_ranker = {'fid': fid, 'score': score}
                     best_weighted_average = weighted_average
-            print('b',best_weak_ranker)
+            
             # stop when all the weaker rankers are out
             if best_weak_ranker is None:
                 break
@@ -105,7 +105,7 @@ class AdaRank(sklearn.base.BaseEstimator):
             if perf_valid > best_perf_valid + self.tol:
                 estop = 0
                 best_perf_valid = perf_valid
-                print('a', coef)
+                
                 self.coef_ = coef.copy()
             else:
                 estop += 1
