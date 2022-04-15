@@ -1,0 +1,1 @@
+The files to be executed are the two jupyter notebooks. All the other ".py" files are auxiliar files for the implementation of the AdaRank model.
