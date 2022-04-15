@@ -128,3 +128,6 @@ class AdaRank(sklearn.base.BaseEstimator):
         """Make predictions"""
         #print(self.coef_)
         return np.dot(X.toarray(), self.coef_)
+
+    def evaluate(self, y, y_pred, qid):
+        return self.scorer(y, y_pred, qid)
